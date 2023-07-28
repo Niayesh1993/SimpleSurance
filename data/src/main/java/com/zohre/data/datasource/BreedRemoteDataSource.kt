@@ -1,6 +1,7 @@
 package com.zohre.data.datasource
 
 import com.zohre.domain.model.Breed
+import com.zohre.domain.model.BreedImages
 
 /**
  * Handles retrieving remote restaurants data.
@@ -12,4 +13,6 @@ interface BreedRemoteDataSource {
      * breeds couldn't be retrieved.
      */
     suspend fun fetchBreeds():Result<Breed>
+
+    suspend fun fetchBreedsImages(breedTitle: String): Result<BreedImages>
 }

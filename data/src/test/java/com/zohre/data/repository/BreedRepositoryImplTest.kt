@@ -2,6 +2,7 @@ package com.zohre.data.repository
 
 import com.zohre.data.datasource.BreedRemoteDataSourceImpl
 import com.zohre.domain.model.Breed
+import com.zohre.domain.model.BreedImages
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -28,6 +29,9 @@ class BreedRepositoryImplTest {
 
     @RelaxedMockK
     lateinit var breed: Breed
+
+    @RelaxedMockK
+    lateinit var breedImages: BreedImages
 
     @InjectMockKs
     lateinit var breedRepositoryImpl: BreedRepositoryImpl
@@ -74,6 +78,32 @@ class BreedRepositoryImplTest {
         val response = breedRepositoryImpl.getBreeds().last()
 
         coVerify { remoteDataSourceImpl.fetchBreeds() }
+        assert(response.isFailure)
+        assert(response.getOrNull() == null)
+    }
+
+    @Test
+    fun `test get image successful response`() = coroutineDispatcher.runBlockingTest {
+        coEvery {
+            remoteDataSourceImpl.fetchBreedsImages(any())
+        } returns Result.success(breedImages)
+
+        val response = breedRepositoryImpl.getBreedsImages("hound").first()
+
+        coVerify { remoteDataSourceImpl.fetchBreedsImages("hound") }
+        assert(response.isSuccess)
+        assert(response.getOrNull() != null)
+    }
+
+    @Test
+    fun `test images failed response`() = coroutineDispatcher.runBlockingTest {
+        coEvery {
+            remoteDataSourceImpl.fetchBreedsImages(any())
+        } returns Result.failure(Throwable(""))
+
+        val response = breedRepositoryImpl.getBreedsImages("hound").last()
+
+        coVerify { remoteDataSourceImpl.fetchBreedsImages("hound") }
         assert(response.isFailure)
         assert(response.getOrNull() == null)
     }

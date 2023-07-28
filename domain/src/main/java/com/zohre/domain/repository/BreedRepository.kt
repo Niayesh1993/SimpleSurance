@@ -1,6 +1,7 @@
 package com.zohre.domain.repository
 
 import com.zohre.domain.model.Breed
+import com.zohre.domain.model.BreedImages
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -14,4 +15,6 @@ interface BreedRepository {
      * It returns Result.failure() when it cannot be handled at the moment.
      */
     fun getBreeds():Flow<Result<Breed>>
+
+    fun getBreedsImages(breedTitle: String): Flow<Result<BreedImages>>
 }

@@ -3,26 +3,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/BreedsListFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.example.simplesuranceapplication.FirstFragment"
+        android:id="@+id/BreedsListFragment"
+        android:name="com.example.simplesuranceapplication.ui.breedlist.BreedsListFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_first">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_BreedFragment_to_FavoriteFragment"
+            app:destination="@id/BreedFavoriteListFragment">
+            <argument
+                android:name="breedTitle"
+                app:argType="string"
+                android:defaultValue=""/>
+        </action>
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.simplesuranceapplication.SecondFragment"
+        android:id="@+id/BreedFavoriteListFragment"
+        android:name="com.example.simplesuranceapplication.ui.imageslist.BreedImagesListFragment"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_second">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_FavoriteFragment_to_BreedFragment"
+            app:destination="@id/BreedsListFragment" />
     </fragment>
 </navigation>

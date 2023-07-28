@@ -3,6 +3,7 @@ package com.zohre.data.repository
 import com.zohre.data.datasource.BreedRemoteDataSource
 import com.zohre.data.di.IODispatcher
 import com.zohre.domain.model.Breed
+import com.zohre.domain.model.BreedImages
 import com.zohre.domain.repository.BreedRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +23,12 @@ class BreedRepositoryImpl @Inject constructor(
 
     override fun getBreeds(): Flow<Result<Breed>> = flow {
         val remoteData = breedRemoteDataSource.fetchBreeds()
+        emit(remoteData)
+    }.flowOn(dispatcher)
+        .catch { emit(Result.failure(it)) }
+
+    override fun getBreedsImages(breedTitle: String): Flow<Result<BreedImages>> = flow {
+        val remoteData = breedRemoteDataSource.fetchBreedsImages(breedTitle)
         emit(remoteData)
     }.flowOn(dispatcher)
         .catch { emit(Result.failure(it)) }
