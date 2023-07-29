@@ -48,9 +48,7 @@ class BreedImagesListFragment : Fragment() {
         initializeVenueObservers()
         viewModel.loadBreedImages(title)
 
-        binding.buttonSecond.setOnClickListener {
-            findNavController().navigate(R.id.action_FavoriteFragment_to_BreedFragment)
-        }
+        binding.txtTitle.text = title
     }
 
     private fun initializeVenueObservers() {

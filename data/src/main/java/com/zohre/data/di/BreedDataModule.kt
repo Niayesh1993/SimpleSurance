@@ -1,5 +1,7 @@
 package com.zohre.data.di
 
+import com.zohre.data.datasource.BreedLocalDataSource
+import com.zohre.data.datasource.BreedLocalDataSourceImpl
 import com.zohre.data.datasource.BreedRemoteDataSource
 import com.zohre.data.datasource.BreedRemoteDataSourceImpl
 import com.zohre.data.repository.BreedRepositoryImpl
@@ -17,6 +19,11 @@ abstract class BreedDataModule {
     abstract fun bindRemoteSource(
         breedRemoteDataSourceImpl: BreedRemoteDataSourceImpl
     ): BreedRemoteDataSource
+
+    @Binds
+    abstract fun bindLocalDataSource(
+        breedLocalDataSourceImpl: BreedLocalDataSourceImpl
+    ): BreedLocalDataSource
 
     @Binds
     abstract fun bindBreedRepository(

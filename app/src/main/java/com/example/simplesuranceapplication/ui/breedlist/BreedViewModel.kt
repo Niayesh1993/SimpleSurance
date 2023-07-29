@@ -27,8 +27,7 @@ class BreedViewModel @Inject constructor(
             fetchBreedList()
         }
     }
-
-    private fun fetchBreedList() {
+     fun fetchBreedList() {
         viewModelScope.launch {
             getBreedsUseCase.execute().collect{ result ->
                 if (result.getOrNull() != null) {
