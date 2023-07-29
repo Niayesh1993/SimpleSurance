@@ -1,12 +1,15 @@
 package com.example.simplesuranceapplication.viewmodel
 
 import com.example.simplesuranceapplication.ui.breedlist.BreedViewModel
-import com.example.simplesuranceapplication.ui.breedlist.convertToBreedUiModel
 import com.example.simplesuranceapplication.ui.breedlist.states.BreedUiModel
 import com.example.simplesuranceapplication.ui.breedlist.states.BreedUiState
+import com.example.simplesuranceapplication.ui.imageslist.BreedImageViewModel
+import com.example.simplesuranceapplication.ui.imageslist.states.BreedImageUiState
 import com.example.simplesuranceapplication.utils.noBreedFound
 import com.zohre.domain.model.Breed
+import com.zohre.domain.model.BreedImages
 import com.zohre.domain.repository.BreedRepository
+import com.zohre.domain.usecase.GetBreedImagesUseCase
 import com.zohre.domain.usecase.GetBreedsUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.coVerify
@@ -29,16 +32,16 @@ import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class BreedViewModelTest {
+class BreedImageViewModelTest {
 
     @RelaxedMockK
     lateinit var breedRepository: BreedRepository
 
     @InjectMockKs
-    lateinit var getBreedsUseCase: GetBreedsUseCase
+    lateinit var getBreedImagesUseCase: GetBreedImagesUseCase
 
     @InjectMockKs
-    lateinit var viewModel: BreedViewModel
+    lateinit var viewModel: BreedImageViewModel
 
     private lateinit var coroutineDispatcher: TestCoroutineDispatcher
 
@@ -51,37 +54,52 @@ class BreedViewModelTest {
 
     @Test
     fun `test loading state`() = coroutineDispatcher.runBlockingTest {
-        val result = viewModel.breedState.first()
+        val result = viewModel.breedImageState.first()
 
-        Assert.assertEquals(result, BreedUiState.Loading)
+        Assert.assertEquals(result, BreedImageUiState.Loading)
     }
 
     @Test
     fun `test successful empty breed loading`() = coroutineDispatcher.runBlockingTest {
         every {
-            getBreedsUseCase.execute()
-        } returns flow {emit(Result.success(Breed(mapOf())))}
+            getBreedImagesUseCase.execute(any())
+        } returns flow { emit(Result.success(BreedImages(breedImages = emptyList()))) }
 
-        viewModel.fetchBreedList()
-        val result = viewModel.breedState.first()
+        viewModel.loadBreedImages("hound")
+        val result = viewModel.breedImageState.first()
 
-        coVerify { getBreedsUseCase.execute() }
-        assert(result is BreedUiState.BreedAvailable)
-        assert((result as BreedUiState.BreedAvailable).breedUiModels!!.isEmpty())
+        coVerify { getBreedImagesUseCase.execute("hound") }
+        assert(result is BreedImageUiState.BreedImagesAvailable)
+        assert((result as BreedImageUiState.BreedImagesAvailable).breedImages!!.breedImages.isEmpty())
+    }
+
+    @Test
+    fun `test breed loading - success`() = coroutineDispatcher.runBlockingTest {
+        val breedImage = mockk<BreedImages>()
+        every { getBreedImagesUseCase.execute(any()) } returns flow {
+            emit(Result.success(breedImage))
+        }
+
+        viewModel.loadBreedImages("hound")
+        val result = viewModel.breedImageState.first()
+
+        coVerify { getBreedImagesUseCase.execute("hound") }
+        assert(result is BreedImageUiState.BreedImagesAvailable)
+        assert((result as BreedImageUiState.BreedImagesAvailable).breedImages == breedImage)
     }
 
     @Test
     fun `test breed loading - failure`() = coroutineDispatcher.runBlockingTest {
-        every { getBreedsUseCase.execute() } returns flow {
+        every { getBreedImagesUseCase.execute(any()) } returns flow {
             emit(Result.failure(Throwable("")))
         }
 
-        viewModel.fetchBreedList()
-        val result = viewModel.breedState.first()
+        viewModel.loadBreedImages("hound")
+        val result = viewModel.breedImageState.first()
 
-        coVerify { getBreedsUseCase.execute() }
-        assert(result is BreedUiState.Failure)
-        assert((result as BreedUiState.Failure).message == noBreedFound.message)
+        coVerify { getBreedImagesUseCase.execute("hound") }
+        assert(result is BreedImageUiState.Failure)
+        assert((result as BreedImageUiState.Failure).message == noBreedFound.message)
 
     }
 

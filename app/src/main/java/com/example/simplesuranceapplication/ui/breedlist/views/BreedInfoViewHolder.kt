@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.simplesuranceapplication.databinding.ItemBreedInfoBinding
+import com.example.simplesuranceapplication.ui.breedlist.states.BreedUiModel
 
 class BreedInfoViewHolder private constructor(private val binding: ItemBreedInfoBinding) :
     RecyclerView.ViewHolder(binding.root) {
@@ -21,18 +22,28 @@ class BreedInfoViewHolder private constructor(private val binding: ItemBreedInfo
         }
     }
 
-    fun onBind(breedTitle: String, addFavoriteClickListener: (String) -> Unit, removeFavoriteClickListener: (String) -> Unit, showImageClickListener: (String) -> Unit) {
-        binding.txtBreedTitle.text = breedTitle
-        binding.btnShowImage.setOnClickListener { showImageClickListener(breedTitle) }
+    fun onBind(breedUiModel: BreedUiModel, addFavoriteClickListener: (BreedUiModel) -> Unit, removeFavoriteClickListener: (BreedUiModel) -> Unit, showImageClickListener: (String) -> Unit) {
+        binding.txtBreedTitle.text = breedUiModel.title
+        if(breedUiModel.favorite){
+            binding.btnAddFavorite.visibility = View.GONE
+            binding.btnRemoveFavorite.visibility = View.VISIBLE
+        }else {
+            binding.btnAddFavorite.visibility = View.VISIBLE
+            binding.btnRemoveFavorite.visibility = View.GONE
+        }
+        binding.btnShowImage.setOnClickListener { showImageClickListener(breedUiModel.title) }
+
         binding.btnAddFavorite.setOnClickListener {
             binding.btnAddFavorite.visibility = View.GONE
             binding.btnRemoveFavorite.visibility = View.VISIBLE
-            addFavoriteClickListener(breedTitle)
+            breedUiModel.favorite = true
+            addFavoriteClickListener(breedUiModel)
         }
         binding.btnRemoveFavorite.setOnClickListener {
             binding.btnAddFavorite.visibility = View.VISIBLE
             binding.btnRemoveFavorite.visibility = View.GONE
-            removeFavoriteClickListener(breedTitle)
+            breedUiModel.favorite = false
+            removeFavoriteClickListener(breedUiModel)
         }
 
     }

@@ -1,6 +1,5 @@
 package com.example.simplesuranceapplication.ui.breedlist.states
 
-import com.zohre.domain.model.Breed
 
 sealed class BreedUiState {
 
@@ -8,5 +7,10 @@ sealed class BreedUiState {
 
     class Failure(val message: String?) : BreedUiState()
 
-    class BreedAvailable(val breeds: Breed?) : BreedUiState()
+    class BreedAvailable(val breedUiModels: List<BreedUiModel>) : BreedUiState()
 }
+
+data class BreedUiModel(
+    val title: String,
+    var favorite: Boolean
+)

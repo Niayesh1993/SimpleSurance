@@ -13,7 +13,7 @@
 
         <action
             android:id="@+id/action_BreedFragment_to_FavoriteFragment"
-            app:destination="@id/BreedFavoriteListFragment">
+            app:destination="@id/BreedImagesListFragment">
             <argument
                 android:name="breedTitle"
                 app:argType="string"
@@ -21,7 +21,7 @@
         </action>
     </fragment>
     <fragment
-        android:id="@+id/BreedFavoriteListFragment"
+        android:id="@+id/BreedImagesListFragment"
         android:name="com.example.simplesuranceapplication.ui.imageslist.BreedImagesListFragment"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_second">

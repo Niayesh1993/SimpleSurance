@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.simplesuranceapplication.R
 import com.example.simplesuranceapplication.databinding.FragmentFirstBinding
 import com.example.simplesuranceapplication.ui.breedlist.adapter.BreedsInfoAdapter
+import com.example.simplesuranceapplication.ui.breedlist.states.BreedUiModel
 import com.example.simplesuranceapplication.ui.breedlist.states.BreedUiState
 import com.zohre.domain.model.Breed
 import dagger.hilt.android.AndroidEntryPoint
@@ -56,6 +57,7 @@ class BreedsListFragment : Fragment() {
             binding.showFavoriteBreeds.visibility = View.VISIBLE
             initializeVenueObservers()
         }
+
     }
 
     private fun showFavoriteBreeds() {
@@ -67,17 +69,16 @@ class BreedsListFragment : Fragment() {
             viewModel.breedState.collect{
                 when(it){
                     BreedUiState.Loading -> showLoading()
-                    is BreedUiState.BreedAvailable -> showBreedList(it.breeds)
+                    is BreedUiState.BreedAvailable -> showBreedList(it.breedUiModels)
                     is BreedUiState.Failure -> hideLoading()
                 }
             }
         }
     }
 
-    private fun showBreedList(breeds: Breed?) {
-       hideLoading()
-        val list = breeds!!.data!!.keys.toList()
-        breedAdapter.submitList(list)
+    private fun showBreedList(breedUiModels: List<BreedUiModel>) {
+        hideLoading()
+        breedAdapter.submitList(breedUiModels)
     }
 
     private fun hideLoading() {
