@@ -6,7 +6,7 @@
         tools:context=".ui.breedlist.BreedsListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:padding="@dimen/fab_margin">
 
     <Button
         android:id="@+id/show_favorite_breeds"

@@ -6,7 +6,7 @@
     tools:context=".ui.imageslist.BreedImagesListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="@dimen/fab_margin">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/txt_title"

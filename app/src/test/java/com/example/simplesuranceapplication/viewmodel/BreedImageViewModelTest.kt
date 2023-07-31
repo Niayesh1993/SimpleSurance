@@ -1,16 +1,12 @@
 package com.example.simplesuranceapplication.viewmodel
 
-import com.example.simplesuranceapplication.ui.breedlist.BreedViewModel
-import com.example.simplesuranceapplication.ui.breedlist.states.BreedUiModel
-import com.example.simplesuranceapplication.ui.breedlist.states.BreedUiState
+
 import com.example.simplesuranceapplication.ui.imageslist.BreedImageViewModel
 import com.example.simplesuranceapplication.ui.imageslist.states.BreedImageUiState
 import com.example.simplesuranceapplication.utils.noBreedFound
-import com.zohre.domain.model.Breed
 import com.zohre.domain.model.BreedImages
 import com.zohre.domain.repository.BreedRepository
 import com.zohre.domain.usecase.GetBreedImagesUseCase
-import com.zohre.domain.usecase.GetBreedsUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.coVerify
 import io.mockk.every

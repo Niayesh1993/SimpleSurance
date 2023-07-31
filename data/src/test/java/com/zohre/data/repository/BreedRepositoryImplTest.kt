@@ -1,5 +1,6 @@
 package com.zohre.data.repository
 
+import com.zohre.data.datasource.BreedLocalDataSourceImpl
 import com.zohre.data.datasource.BreedRemoteDataSourceImpl
 import com.zohre.domain.model.Breed
 import com.zohre.domain.model.BreedImages
@@ -26,6 +27,9 @@ class BreedRepositoryImplTest {
 
     @RelaxedMockK
     lateinit var remoteDataSourceImpl: BreedRemoteDataSourceImpl
+
+    @RelaxedMockK
+    lateinit var localDataSourceImpl: BreedLocalDataSourceImpl
 
     @RelaxedMockK
     lateinit var breed: Breed
@@ -83,27 +87,58 @@ class BreedRepositoryImplTest {
     }
 
     @Test
-    fun `test get image successful response`() = coroutineDispatcher.runBlockingTest {
+    fun `test get image successful response - no cache`() = coroutineDispatcher.runBlockingTest {
         coEvery {
             remoteDataSourceImpl.fetchBreedsImages(any())
         } returns Result.success(breedImages)
 
+        coEvery { localDataSourceImpl.fetchBreedsImages(any()) }returns Result.failure(Throwable(""))
+
         val response = breedRepositoryImpl.getBreedsImages("hound").first()
 
         coVerify { remoteDataSourceImpl.fetchBreedsImages("hound") }
+        coVerify { localDataSourceImpl.fetchBreedsImages("hound") }
         assert(response.isSuccess)
         assert(response.getOrNull() != null)
     }
 
     @Test
-    fun `test images failed response`() = coroutineDispatcher.runBlockingTest {
+    fun `test get image successful response - cached`() = coroutineDispatcher.runBlockingTest {
+
+        coEvery {
+            localDataSourceImpl.fetchBreedsImages(any())
+        } returns Result.success(breedImages)
+
         coEvery {
             remoteDataSourceImpl.fetchBreedsImages(any())
         } returns Result.failure(Throwable(""))
 
+
+        val firstResponse = breedRepositoryImpl.getBreedsImages("hound").first()
+        val lastResponse = breedRepositoryImpl.getBreedsImages("hound").last()
+
+
+        coVerify { remoteDataSourceImpl.fetchBreedsImages("hound") }
+        coVerify { localDataSourceImpl.fetchBreedsImages("hound") }
+        assert(firstResponse.isSuccess)
+        assert(firstResponse.getOrNull() != null)
+        assert(lastResponse.isFailure)
+    }
+
+    @Test
+    fun `test images failed response - no cache`() = coroutineDispatcher.runBlockingTest {
+        coEvery {
+            remoteDataSourceImpl.fetchBreedsImages(any())
+        } returns Result.failure(Throwable(""))
+
+        coEvery { localDataSourceImpl.fetchBreedsImages(any()) }returns Result.failure(Throwable(""))
+
+
+
         val response = breedRepositoryImpl.getBreedsImages("hound").last()
 
         coVerify { remoteDataSourceImpl.fetchBreedsImages("hound") }
+        coVerify { localDataSourceImpl.fetchBreedsImages("hound") }
         assert(response.isFailure)
         assert(response.getOrNull() == null)
     }

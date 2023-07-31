@@ -16,7 +16,7 @@ object BreedsImageDiffCallback : DiffUtil.ItemCallback<String>() {
     }
 }
 
-class BreedsImageAdapter(): ListAdapter<String, BreedImageViewHolder>(BreedsImageDiffCallback) {
+class BreedsImageAdapter: ListAdapter<String, BreedImageViewHolder>(BreedsImageDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BreedImageViewHolder {
         return BreedImageViewHolder.createFrom(parent)
